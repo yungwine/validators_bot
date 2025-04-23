@@ -1,0 +1,72 @@
+import asyncio
+import logging
+import os
+import sys
+
+from aiogram import Bot, Dispatcher, html, Router
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
+
+from database import Database
+from handlers import (add_node_router, menu_router, edit_node_router, notifications_router,
+                      TEXTS, add_adnl_message_handler, add_label_message_handler)
+
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv('BOT_TOKEN')
+
+
+router = Router(name=__name__)
+
+
+async def set_default_commands(bot: Bot):
+    commands = [
+        BotCommand(command='start', description='Bot Start'),
+        BotCommand(command='help', description='Help'),
+    ]
+    await bot.set_my_commands(
+        commands, scope=BotCommandScopeAllPrivateChats()
+    )
+
+
+async def on_startup(bot: Bot):
+    await set_default_commands(bot)
+
+
+@router.message()
+async def message_handler(message: Message, db_manager: Database) -> None:
+    user_state = await db_manager.get_user_state(message.from_user.id)
+    if user_state == 'add_node':
+        await add_adnl_message_handler(message, db_manager)
+    elif user_state.startswith('add_label'):
+        await add_label_message_handler(message, db_manager)
+    else:
+        await message.answer(text=TEXTS['unknown_command'])
+
+
+async def run_bot() -> None:
+    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+    db = Database()
+    await db.init_db()
+
+    dp = Dispatcher(session_maker=None, db_manager=db)
+    dp.include_router(menu_router)
+    dp.include_router(edit_node_router)
+    dp.include_router(notifications_router)
+    dp.include_router(add_node_router)
+    dp.include_router(router)
+
+    dp.startup.register(set_default_commands)
+    dp.shutdown.register(db.close)
+
+    # And the run events dispatching
+    await dp.start_polling(bot)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    asyncio.run(run_bot())
