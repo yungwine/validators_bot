@@ -37,7 +37,9 @@ async def main():
         run_bot(bot, db)
     )
 
-    await asyncio.gather(alerts_task, bot_task)
+    while True:
+        await asyncio.sleep(60)
+    # await asyncio.gather(alerts_task, bot_task)
 
 
 if __name__ == "__main__":
