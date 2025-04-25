@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import String, BigInteger, DateTime, ARRAY, ForeignKey
+from sqlalchemy import String, BigInteger, DateTime, ARRAY, ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -22,10 +22,9 @@ class NodeModel(Base):
     __tablename__ = "nodes"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.user_id"))
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.user_id"), index=True)
     adnl: Mapped[str] = mapped_column(String(64))
     label: Mapped[Optional[str]] = mapped_column(String(64))
-    enabled_alerts: Mapped[str] = mapped_column(String(128), default="")
 
 
 class AlertModel(Base):
@@ -37,6 +36,9 @@ class AlertModel(Base):
     alert_type: Mapped[str] = mapped_column(String(32))
     enabled: Mapped[bool] = mapped_column(default=True)
 
+    __table_args__ = (
+        Index("idx_alert_enabled", "alert_type", "user_id", "enabled"),
+    )
 
 class TriggeredAlert(Base):
     __tablename__ = "triggered_alerts"

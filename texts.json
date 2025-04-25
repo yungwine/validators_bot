@@ -13,6 +13,8 @@
   "alert_enabled": "Alert <b>{alert}</b> enabled!",
   "alert_disabled": "Alert <b>{alert}</b> disabled!",
   "complaint": "<b>Index: {index}</b>\nADNL: <code>{adnl}</code>\nEfficiency: <b>{efficiency}%</b>\nPenalty: <b>{penalty} TON</b>\n",
+  "complaints_information": "<b>Penalties for round {election_id}</b>\n\nRound's started: <b>{start_time}</b>\nRound's over: <b>{end_time}</b>\n\n{complaints}\n",
+  "no_complaints": "No poor performing validators in the round.",
   "stake_sent": "Validator <code>{adnl}</code> sent stake: <b>{stake}</b> TON.",
   "stake_not_sent": "Validators didn't send stake for round <b>{election_id}</b>:\n",
   "complaints_alert": "\uD83C\uDD98 <b>Validator</b> <code>{adnl_short}</code> <b>has been fined</b>\n\nADNL: <code>{adnl}</code>\nRound: <b>{election_id}</b>\nPenalty: <b>{penalty} TON</b>\n",

@@ -156,5 +156,21 @@ class Database:
             )
             await session.commit()
 
+    async def get_users_with_enabled_alert(self, alert_type: str) -> list[UserModel]:
+        async with (self.session_maker() as session):
+            query = select(UserModel).join(
+                AlertModel,
+                UserModel.user_id == AlertModel.user_id
+            ).join(
+                NodeModel,
+                UserModel.user_id == NodeModel.user_id
+            ).where(
+                AlertModel.alert_type == alert_type,
+                AlertModel.enabled == True
+            ).distinct()
+
+            result = await session.scalars(query)
+            return list(result.all())
+
     async def close(self):
         await self.engine.dispose()

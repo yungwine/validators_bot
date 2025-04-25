@@ -1,5 +1,6 @@
 import dataclasses
 import logging
+import traceback
 from abc import ABC, abstractmethod
 
 from aiogram import Bot
@@ -29,7 +30,22 @@ class Alert(ABC):
         self.toncenter: Toncenter = toncenter
         self.database: Database = database
         self.bot: Bot = bot
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.alert_type: str = self.__class__.__name__
+        self.logger = logging.getLogger(self.alert_type)
+
+    async def get_users(self):
+        return await self.database.get_users_with_enabled_alert(self.alert_type)
+
+    async def run(self):
+        self.logger.info(f'Alert {self.alert_type} running is started.')
+        try:
+            users = await self.get_users()
+            if not users:
+                return
+            await self.check(users)
+        except Exception as e:
+            self.logger.warning(f"Error in alert: {e}\n{traceback.format_exc()}")
+        self.logger.info(f'Alert {self.alert_type} running is done.')
 
     async def send_message(self, user_id: int, text: str) -> None:
         try:
@@ -37,6 +53,10 @@ class Alert(ABC):
         except Exception as e:
             self.logger.warning(f"Failed to send message to {user_id}: {e}")
             return
+
+    @abstractmethod
+    async def check(self, users: list[UserModel]) -> None:
+        pass
 
     async def inform(self, user: UserModel, alert_name: str, text: str):
         triggered_alerts = await self.database.get_triggered_alerts(user.user_id, alert_name)

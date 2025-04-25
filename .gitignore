@@ -176,3 +176,4 @@ cython_debug/
 bot_users.db
 
 *.service
+/test.py

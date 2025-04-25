@@ -1,20 +1,29 @@
 import asyncio
 import os
+from typing import Optional
 
 from alerts.alert import Alert
-from alerts.utils import amount_formatting, get_adnl_text
+from alerts.utils import get_adnl_text
 from database import UserModel, NodeModel
 from handlers.utils import TEXTS
 
 
 class TelemetryAlert(Alert):
 
+	@staticmethod
+	def get_node_telemetry(telemetry_list: list[dict], adnl: str) -> Optional[dict]:
+		for node in telemetry_list:
+			if node['adnl_address'] == adnl:
+				return node
+
 	async def check(self, users: list[UserModel]):
+		nodes_telemetry = await self.toncenter.get_telemetry_list()
 		for user in users:
 			nodes = await self.database.get_user_nodes(user.user_id)
 			for node in nodes:
-				node_telemetry = await self.toncenter.get_telemetry(node.adnl)
-				if node is None:
+				node_telemetry = self.get_node_telemetry(nodes_telemetry, node.adnl)
+				if node_telemetry is None:
+					self.logger.info(f'Node {node.adnl} is not in telemetry list')
 					continue
 				tasks = [
 					self.check_sync(user, node_telemetry, node),
@@ -29,7 +38,7 @@ class TelemetryAlert(Alert):
 						self.logger.error(r)
 
 	async def check_sync(self, user: UserModel, node_data: dict, node: NodeModel):
-		out_of_sync = node_data['validatorStatus']['out_of_sync']
+		out_of_sync = node_data['data']['validatorStatus']['out_of_sync']
 		await self.check_with_threshold(user, alert_name="Sync", node=node, value=out_of_sync,
 										upper=40, lower=20)
 
@@ -64,9 +73,9 @@ class TelemetryAlert(Alert):
 
 	async def check_with_threshold(self, user: UserModel, alert_name: str, node: NodeModel, upper: int, lower: int, value: int, **kwargs):
 		if value > upper:
-			await self.warn(user, alert_name, node=node, overloaded=True, threshold=upper, **kwargs)
+			await self.warn(user, alert_name, node=node, overloaded=True, threshold=upper, value=value, **kwargs)
 		elif value < lower:
-			await self.warn(user, alert_name, node=node, overloaded=False, threshold=lower, **kwargs)
+			await self.warn(user, alert_name, node=node, overloaded=False, threshold=lower, value=value, **kwargs)
 
 	async def warn(self, user: UserModel, alert_type: str, overloaded: bool, node: NodeModel, **kwargs):
 		alert_name = f"{type(self).__name__}-{alert_type}-{node.adnl}"

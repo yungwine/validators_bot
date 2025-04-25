@@ -3,10 +3,8 @@ import logging
 import os
 import sys
 
-from aiogram import Bot, Dispatcher, html, Router
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram import Bot, Dispatcher, Router
+from aiogram.types import Message
 from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
 
 from database import Database
@@ -47,11 +45,10 @@ async def message_handler(message: Message, db_manager: Database) -> None:
         await message.answer(text=TEXTS['unknown_command'])
 
 
-async def run_bot() -> None:
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-
-    db = Database()
-    await db.init_db()
+async def run_bot(bot: Bot, db: Database) -> None:
+    # bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    # db = Database()
+    # await db.init_db()
 
     dp = Dispatcher(session_maker=None, db_manager=db)
     dp.include_router(menu_router)

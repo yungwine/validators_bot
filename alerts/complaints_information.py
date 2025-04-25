@@ -32,6 +32,8 @@ class ComplaintsInformation(Alert):
 			complaints_text += TEXTS['complaint'].format(index=validator['index'], adnl=complaint['adnl_addr'],
 														 efficiency=efficiency, penalty=penalty_text)
 			complaints_text += '\n'
+		if not complaints:
+			complaints_text += TEXTS['no_complaints']
 
 		start_time = timestamp2utcdatetime(election_id)
 		end_time = timestamp2utcdatetime(utime_until)

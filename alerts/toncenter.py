@@ -51,15 +51,6 @@ class Toncenter:
 				result.append(adnl_addr)
 		return result
 
-	async def get_nodes_list(self):
-		result = []
-		telemetry_list = await self.get_telemetry_list()
-		for node in telemetry_list:
-			if node.adnl_address in result:
-				continue
-			result.append(node.adnl_address)
-		return result
-
 	async def get_telemetry(self, adnl):
 		node = await self.do_get_telemetry(adnl)
 		if node is None:
@@ -68,7 +59,7 @@ class Toncenter:
 	async def do_get_telemetry(self, adnl):
 		telemetry_list = await self.get_telemetry_list()
 		for node in telemetry_list:
-			if node.adnl_address != adnl:
+			if node['adnl_address'] != adnl:
 				continue
 			return node
 

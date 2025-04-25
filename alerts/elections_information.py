@@ -1,8 +1,7 @@
 from alerts.alert import Alert
-from alerts.toncenter import Toncenter
-from database import Database, UserModel, NodeModel
-from handlers import TEXTS
-from utils import amount_formatting, get_adnl_text
+from database import UserModel, NodeModel
+from handlers.utils import TEXTS
+from alerts.utils import amount_formatting, get_adnl_text
 
 
 class ElectionsInformation(Alert):
