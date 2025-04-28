@@ -8,6 +8,9 @@ from handlers.utils import TEXTS
 
 class ComplaintsInformation(Alert):
 
+	async def get_users(self):
+		return await self.database.get_users_with_enabled_alert(self.alert_type, only_with_nodes=False)  # send this alert to all users
+
 	async def check(self, users: list[UserModel]):
 		past_validation_cycle = await self.toncenter.get_validation_cycle(past=True)
 		election_id = past_validation_cycle['cycle_id']
