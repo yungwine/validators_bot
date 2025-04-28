@@ -53,7 +53,10 @@ async def node_callback_handler(callback_query: CallbackQuery, db_manager: Datab
         ]
 
         markup = InlineKeyboardMarkup(inline_keyboard=buttons)
-        node_text = f"Node: <b>{node.label or node.adnl[:10] + '...'}</b>\nADNL: <code>{node.adnl}</code>"
+        node_text = ''
+        if node.label:
+            node_text += f"Node: <b>{node.label or node.adnl[:10] + '...'}</b>\n"
+        node_text += "ADNL: <code>{node.adnl}</code>"
         await callback_query.message.edit_text(text=node_text, reply_markup=markup)
     else:
         await callback_query.answer("Node not found.")
