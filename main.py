@@ -20,10 +20,11 @@ async def main():
 
     bot_token = os.getenv('BOT_TOKEN')
     api_key = os.getenv('TONCENTER_API_KEY')
+    database_url = os.getenv('DATABASE_URL')
     if not bot_token:
         raise ValueError("BOT_TOKEN environment variable is not set")
 
-    db = Database()
+    db = Database(database_url)
     await db.init_db()
 
     toncenter = Toncenter(api_key)

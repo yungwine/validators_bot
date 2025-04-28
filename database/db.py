@@ -8,7 +8,7 @@ from database.models import Base, UserModel, NodeModel, TriggeredAlert, AlertMod
 
 
 class Database:
-    def __init__(self, db_url="sqlite+aiosqlite:///bot_users.db"):
+    def __init__(self, db_url: str):
         self.engine: AsyncEngine = create_async_engine(db_url)
         self.session_maker: async_sessionmaker[AsyncSession] = async_sessionmaker(
             self.engine, class_=AsyncSession, expire_on_commit=False, autoflush=False
