@@ -33,12 +33,7 @@ async def main():
     alerts_task = asyncio.create_task(
         run_alerts_scanner(toncenter, db, bot)
     )
-    bot_task = asyncio.create_task(
-        run_bot(bot, db)
-    )
-
-    while True:
-        await asyncio.sleep(60)
+    await run_bot(bot, db)
     # await asyncio.gather(alerts_task, bot_task)
 
 
