@@ -84,21 +84,21 @@ class Toncenter:
 		return data
 
 	async def get_validation_cycles_list(self) -> list:
-		url = "https://elections.toncenter.com/getValidationCycles?limit=2"
+		url = f"https://elections.toncenter.com/getValidationCycles?limit=2&api_key={self.api_key}"
 		data = await try_get_url(url)
 		return data
 
 	async def get_elections_list(self) -> list:
-		url = "https://elections.toncenter.com/getElections"
+		url = f"https://elections.toncenter.com/getElections?api_key={self.api_key}"
 		data = await try_get_url(url)
 		return data
 
 	async def get_complaints_list(self, election_id) -> list:
-		url = f"https://elections.toncenter.com/getComplaints?election_id={election_id}&limit=100"
+		url = f"https://elections.toncenter.com/getComplaints?election_id={election_id}&limit=100&api_key={self.api_key}"
 		data = await try_get_url(url)
 		return data
 
 	async def get_efficiency_list(self, election_id) -> list:
-		url = f"https://toncenter.com/api/qos/cycleScoreboard?cycle_id={election_id}&limit=1000"
+		url = f"https://toncenter.com/api/qos/cycleScoreboard?cycle_id={election_id}&limit=1000&api_key={self.api_key}"
 		data = await try_get_url(url)
 		return data['scoreboard']
