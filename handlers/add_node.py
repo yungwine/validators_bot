@@ -1,6 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
+from alerts.toncenter import Toncenter
 from database import Database
 from handlers.utils import TEXTS
 from handlers.menu import main_menu
@@ -14,7 +15,7 @@ async def add_adnl_callback_handler(callback_query: CallbackQuery, db_manager: D
     await db_manager.set_user_state(callback_query.from_user.id, 'add_node')
 
 
-async def add_adnl_message_handler(message: Message, db_manager: Database) -> None:
+async def add_adnl_message_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
     adnl = message.text
     try:
         int(adnl, 16)
@@ -25,7 +26,6 @@ async def add_adnl_message_handler(message: Message, db_manager: Database) -> No
         await message.answer(text=TEXTS['wrong_adnl'])
         return
     nodes = await db_manager.get_user_nodes(message.from_user.id)
-    print(nodes)
     for node in nodes:
         if node.adnl == adnl:
             await message.answer(text=TEXTS['node_already_exists'])
@@ -36,7 +36,11 @@ async def add_adnl_message_handler(message: Message, db_manager: Database) -> No
         InlineKeyboardButton(text='Skip', callback_data='skip_add_label'),
     ]
     markup = InlineKeyboardMarkup(inline_keyboard=[buttons1])
-    await message.answer(TEXTS['node_added'], reply_markup=markup)
+    send_telemetry = await toncenter.is_send_telemetry(adnl)
+    text = TEXTS['node_added']
+    if not send_telemetry:
+        text += TEXTS['node_telemetry_not_send']
+    await message.answer(text, reply_markup=markup)
 
 
 async def add_label_message_handler(message: Message, db_manager: Database) -> None:

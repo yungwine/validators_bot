@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
-# -*- coding: utf_8 -*-
 import asyncio
-import json
-import base64
 import time
+from typing import Optional
 
 import aiohttp
 
@@ -51,20 +48,8 @@ class Toncenter:
 				result.append(adnl_addr)
 		return result
 
-	async def get_telemetry(self, adnl):
-		node = await self.do_get_telemetry(adnl)
-		if node is None:
-			return
-
-	async def do_get_telemetry(self, adnl):
-		telemetry_list = await self.get_telemetry_list()
-		for node in telemetry_list:
-			if node['adnl_address'] != adnl:
-				continue
-			return node
-
-	async def is_send_telemetry(self, adnl):
-		node = await self.do_get_telemetry(adnl)
+	async def is_send_telemetry(self, adnl: str) -> bool:
+		node = await self.get_telemetry_for_adnl(adnl)
 		if node:
 			return True
 		return False
@@ -84,18 +69,24 @@ class Toncenter:
 		data = await self.get_elections_list()
 		return data[0]
 
+	async def get_telemetry_for_adnl(self, adnl: str) -> Optional[dict]:
+		timestamp = int(time.time())
+		url = f"https://telemetry.toncenter.com/getTelemetryData?timestamp_from={timestamp-100}&api_key={self.api_key}&adnl_address={adnl}"
+		data = await try_get_url(url)
+		if data:
+			return data[0]
+		return None
+
 	async def get_telemetry_list(self) -> list:
 		timestamp = int(time.time())
 		url = f"https://telemetry.toncenter.com/getTelemetryData?timestamp_from={timestamp-100}&api_key={self.api_key}"
 		data = await try_get_url(url)
 		return data
-	#end define
 
 	async def get_validation_cycles_list(self) -> list:
 		url = "https://elections.toncenter.com/getValidationCycles?limit=2"
 		data = await try_get_url(url)
 		return data
-	#end define
 
 	async def get_elections_list(self) -> list:
 		url = "https://elections.toncenter.com/getElections"

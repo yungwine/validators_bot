@@ -31,10 +31,10 @@ async def main():
 
     bot = Bot(token=bot_token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
-    alerts_task = asyncio.create_task(
+    asyncio.create_task(
         run_alerts_scanner(toncenter, db, bot)
     )
-    await run_bot(bot, db)
+    await run_bot(bot, db, toncenter)
     # await asyncio.gather(alerts_task, bot_task)
 
 

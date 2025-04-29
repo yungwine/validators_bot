@@ -7,6 +7,7 @@ from aiogram import Bot, Dispatcher, Router
 from aiogram.types import Message
 from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
 
+from alerts.toncenter import Toncenter
 from database import Database
 from handlers import (add_node_router, menu_router, edit_node_router, notifications_router,
                       TEXTS, add_adnl_message_handler, add_label_message_handler)
@@ -35,22 +36,22 @@ async def on_startup(bot: Bot):
 
 
 @router.message()
-async def message_handler(message: Message, db_manager: Database) -> None:
+async def message_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
     user_state = await db_manager.get_user_state(message.from_user.id)
     if user_state == 'add_node':
-        await add_adnl_message_handler(message, db_manager)
+        await add_adnl_message_handler(message, db_manager, toncenter)
     elif user_state.startswith('add_label'):
         await add_label_message_handler(message, db_manager)
     else:
         await message.answer(text=TEXTS['unknown_command'])
 
 
-async def run_bot(bot: Bot, db: Database) -> None:
+async def run_bot(bot: Bot, db: Database, toncenter: Toncenter) -> None:
     # bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     # db = Database()
     # await db.init_db()
 
-    dp = Dispatcher(session_maker=None, db_manager=db)
+    dp = Dispatcher(session_maker=None, db_manager=db, toncenter=toncenter)
     dp.include_router(menu_router)
     dp.include_router(edit_node_router)
     dp.include_router(notifications_router)
