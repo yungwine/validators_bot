@@ -24,7 +24,6 @@ router = Router(name=__name__)
 async def set_default_commands(bot: Bot):
     commands = [
         BotCommand(command='start', description='Bot Start'),
-        BotCommand(command='help', description='Help'),
     ]
     await bot.set_my_commands(
         commands, scope=BotCommandScopeAllPrivateChats()
