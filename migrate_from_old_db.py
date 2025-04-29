@@ -28,7 +28,7 @@ async def migrate():
                 continue
             await new_db.add_triggered_alert(user_id, alert_name, timestamp)
 
-        print(f"Migration completed: {len(old_db['users'])} users migrated")
+    print(f"Migration completed: {len(old_db['users'])} users migrated")
 
 
 if __name__ == "__main__":

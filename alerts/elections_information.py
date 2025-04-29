@@ -18,7 +18,7 @@ class ElectionsInformation(Alert):
 				await self.check_after_start(election_data['election_id'], user, user_nodes, user_participants)
 
 	async def check_before_start(self, election_id: int, user: UserModel, user_participants_list: dict):
-		for node, node_election_data in user_participants_list.values():
+		for node_election_data, node in user_participants_list.values():
 			await self.inform_before_start(user, election_id, node, node_election_data)
 
 	async def inform_before_start(self, user: UserModel, election_id, node: NodeModel, node_data: dict):
