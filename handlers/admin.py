@@ -120,7 +120,7 @@ async def start_notification(message: types.Message, db_manager: Database, admin
 
 @admin_router.message(Command("stop_notification"))
 async def stop_notification(message: types.Message, admin_users: list[int]) -> None:
-    global notification_task
+    global notification_task, notification_data
 
     if message.from_user.id not in admin_users:
         await message.answer("You are not authorized to use this command.")
@@ -130,6 +130,7 @@ async def stop_notification(message: types.Message, admin_users: list[int]) -> N
         return
     notification_task.cancel()
     notification_task = None
+    notification_data = None
     await send_message_to_admins(message.bot, "Notification task has been cancelled.", admin_users)
 
 
