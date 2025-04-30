@@ -9,13 +9,14 @@ from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats
 
 from alerts.toncenter import Toncenter
 from database import Database
-from handlers import (add_node_router, menu_router, edit_node_router, notifications_router,
+from handlers import (add_node_router, menu_router, edit_node_router, notifications_router, admin_router,
                       TEXTS, add_adnl_message_handler, add_label_message_handler)
 
 from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
+admin_users = list(map(int, os.getenv('ADMIN_USERS', '').split()))
 
 
 router = Router(name=__name__)
@@ -50,11 +51,12 @@ async def run_bot(bot: Bot, db: Database, toncenter: Toncenter) -> None:
     # db = Database()
     # await db.init_db()
 
-    dp = Dispatcher(session_maker=None, db_manager=db, toncenter=toncenter)
+    dp = Dispatcher(session_maker=None, db_manager=db, toncenter=toncenter, admin_users=admin_users)
     dp.include_router(menu_router)
     dp.include_router(edit_node_router)
     dp.include_router(notifications_router)
     dp.include_router(add_node_router)
+    dp.include_router(admin_router)
     dp.include_router(router)
 
     dp.startup.register(set_default_commands)

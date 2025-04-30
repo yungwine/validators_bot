@@ -61,6 +61,11 @@ class Database:
             await session.refresh(user)
             return user
 
+    async def get_users(self):
+        async with self.session_maker() as session:
+            users = await session.scalars(select(UserModel))
+            return list(users.all())
+
     async def get_user(self, user_id: int):
         async with self.session_maker() as session:
             user = await session.scalar(select(UserModel).filter(UserModel.user_id == user_id))
