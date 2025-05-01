@@ -6,6 +6,8 @@ from alerts.utils import amount_formatting, get_adnl_text
 
 class ElectionsInformation(Alert):
 
+	disable_notification = True
+
 	async def check(self, users: list[UserModel]):
 		election_data = await self.toncenter.get_election_data()
 		elections_data_dict = {p['adnl_addr']: p for p in election_data['participants_list']}

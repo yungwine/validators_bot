@@ -26,6 +26,8 @@ ALERTS = [
 
 class Alert(ABC):
 
+    disable_notification = False
+
     def __init__(self, toncenter: Toncenter, database: Database, bot: Bot, *args, **kwargs):
         self.toncenter: Toncenter = toncenter
         self.database: Database = database
@@ -49,7 +51,7 @@ class Alert(ABC):
 
     async def send_message(self, user_id: int, text: str) -> None:
         try:
-            await self.bot.send_message(chat_id=user_id, text=text)
+            await self.bot.send_message(chat_id=user_id, text=text, disable_notification=self.disable_notification)
         except Exception as e:
             self.logger.warning(f"Failed to send message to {user_id}: {e}")
             return
