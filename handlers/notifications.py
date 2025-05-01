@@ -45,4 +45,7 @@ async def alert_callback_handler(callback_query: CallbackQuery, db_manager: Data
     elif action == 'disable':
         await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
         await callback_query.message.edit_text(text=TEXTS['alert_disabled'].format(alert=alert_id), reply_markup=markup)
-
+    elif action == 'disable_no_edit':
+        await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
+        await callback_query.message.edit_reply_markup(reply_markup=None)
+        await callback_query.message.answer(text=TEXTS['alert_disabled'].format(alert=alert_id))

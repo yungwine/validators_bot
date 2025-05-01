@@ -4,6 +4,7 @@ import traceback
 from abc import ABC, abstractmethod
 
 from aiogram import Bot
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from alerts.toncenter import Toncenter
 from database import Database, UserModel
@@ -51,7 +52,9 @@ class Alert(ABC):
 
     async def send_message(self, user_id: int, text: str) -> None:
         try:
-            await self.bot.send_message(chat_id=user_id, text=text, disable_notification=self.disable_notification)
+            buttons = [[InlineKeyboardButton(text=f"Disable {self.alert_type} alerts", callback_data=f"alert:disable_no_edit:{self.alert_type}")]]
+            markup = InlineKeyboardMarkup(inline_keyboard=buttons)
+            await self.bot.send_message(chat_id=user_id, text=text, disable_notification=self.disable_notification, reply_markup=markup)
         except Exception as e:
             self.logger.warning(f"Failed to send message to {user_id}: {e}")
             return
