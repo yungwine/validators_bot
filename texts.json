@@ -7,6 +7,8 @@
   "node_telemetry_not_send": "<b>Note:</b> this node does not send telemetry data so you won't receive <i>TelemetryAlert</i> notifications.\nTo enable telemetry on node type <code>set sendTelemetry true</code> in MyTonCtrl console.",
   "wrong_label": "The label should be 1-32 characters long.",
   "node_label_added": "Great! Now you can go to the <i>Notifications</i> section and configure notifications.",
+  "node_label_updated": "Node label has been updated.",
+  "edit_label": "Please send a new label for your node.\n\nLabel should be 32 characters or less.",
   "unknown_command": "Unknown command. Please try again.",
   "main_menu": "This bot will help you to track your TON nodes status: Telemetry, Fines, Urgent Alerts and more. \n\n\uD83D\uDCA1 Subscribe to <a href=\"https://t.me/tonstatus\">TON Status</a> channel to stay updated and receive urgent announcements.",
   "my_nodes": "This section lists all the nodes you’ve added. Select any of them to configure notifications.",
