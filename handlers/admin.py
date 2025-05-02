@@ -48,9 +48,9 @@ async def get_user_stats(message: types.Message, db_manager: Database, admin_use
 
         alert_counts = {}
 
-        for alert in ALERTS:
-            users_with_alert = await db_manager.get_users_with_enabled_alert(alert.type, only_with_nodes=False)
-            alert_counts[alert.type] = len(users_with_alert)
+        for alert_type in ALERTS:
+            users_with_alert = await db_manager.get_users_with_enabled_alert(alert_type, only_with_nodes=False)
+            alert_counts[alert_type] = len(users_with_alert)
 
         execution_time = time.time() - start_time
 

@@ -16,14 +16,16 @@ async def my_nodes_callback_handler(callback_query: CallbackQuery, db_manager: D
     for alert in user_alerts:
         if alert.enabled:
             enabled_alerts.append(alert.alert_type)
-    text = TEXTS['my_alerts'].format(alerts=', '.join(enabled_alerts))
+    supported_alerts = {a.name: a.description for a in ALERTS.values()}
+    supported_alerts_text = '\n'.join([f"<b>{name}</b>\n{description}\n" for name, description in supported_alerts.items()])
+    text = TEXTS['my_alerts'].format(alerts=supported_alerts_text)
     buttons = []
 
-    for alert in ALERTS:
-        if alert.type in enabled_alerts:
-            buttons.append([InlineKeyboardButton(text=f"Disable {alert.name}", callback_data=f"alert:disable:{alert.type}")])
+    for alert_type, alert in ALERTS.items():
+        if alert_type in enabled_alerts:
+            buttons.append([InlineKeyboardButton(text=f"🔔 {alert.name}", callback_data=f"alert:disable:{alert_type}")])
         else:
-            buttons.append([InlineKeyboardButton(text=f"Enable {alert.name}", callback_data=f"alert:enable:{alert.type}")])
+            buttons.append([InlineKeyboardButton(text=f"🔕 {alert.name}", callback_data=f"alert:enable:{alert_type}")])
 
     buttons.append([InlineKeyboardButton(text="‹ Back", callback_data="main_menu")])
 
@@ -45,4 +47,7 @@ async def alert_callback_handler(callback_query: CallbackQuery, db_manager: Data
     elif action == 'disable':
         await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
         await callback_query.message.edit_text(text=TEXTS['alert_disabled'].format(alert=alert_id), reply_markup=markup)
-
+    elif action == 'disable_no_edit':
+        await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
+        await callback_query.message.edit_reply_markup(reply_markup=None)
+        await callback_query.message.answer(text=TEXTS['alert_disabled'].format(alert=alert_id))

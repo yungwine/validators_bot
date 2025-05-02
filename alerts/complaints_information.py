@@ -8,6 +8,8 @@ from handlers.utils import TEXTS
 
 class ComplaintsInformation(Alert):
 
+	disable_notification = True
+
 	async def get_users(self):
 		return await self.database.get_users_with_enabled_alert(self.alert_type, only_with_nodes=False)  # send this alert to all users
 

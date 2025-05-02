@@ -14,6 +14,8 @@ from handlers import (add_node_router, menu_router, edit_node_router, notificati
 
 from dotenv import load_dotenv
 
+from handlers.edit_nodes import edit_label_message_handler
+
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
 admin_users = list(map(int, os.getenv('ADMIN_USERS', '').split()))
@@ -42,6 +44,8 @@ async def message_handler(message: Message, db_manager: Database, toncenter: Ton
         await add_adnl_message_handler(message, db_manager, toncenter)
     elif user_state.startswith('add_label'):
         await add_label_message_handler(message, db_manager)
+    elif user_state.startswith('edit_label'):
+        await edit_label_message_handler(message, db_manager)
     else:
         await message.answer(text=TEXTS['unknown_command'])
 

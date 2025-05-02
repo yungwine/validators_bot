@@ -43,7 +43,7 @@ async def add_adnl_message_handler(message: Message, db_manager: Database, tonce
     await message.answer(text, reply_markup=markup)
 
 
-async def add_label_message_handler(message: Message, db_manager: Database) -> None:
+async def set_label(message: Message, db_manager: Database) -> None:
     user_state = await db_manager.get_user_state(message.from_user.id)
     label = message.text
     adnl = user_state.split(':')[1]
@@ -52,6 +52,9 @@ async def add_label_message_handler(message: Message, db_manager: Database) -> N
         return
     await db_manager.set_node_label(message.from_user.id, adnl, label)
     await db_manager.set_user_state(message.from_user.id, '')
+
+async def add_label_message_handler(message: Message, db_manager: Database) -> None:
+    await set_label(message, db_manager)
     await message.answer(text=TEXTS['node_label_added'])
     await main_menu(message)
 
