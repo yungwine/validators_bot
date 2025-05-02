@@ -10,7 +10,7 @@
   "unknown_command": "Unknown command. Please try again.",
   "main_menu": "This bot will help you to track your TON nodes status: Telemetry, Fines, Urgent Alerts and more. \n\n\uD83D\uDCA1 Subscribe to <a href=\"https://t.me/tonstatus\">TON Status</a> channel to stay updated and receive urgent announcements.",
   "my_nodes": "This section lists all the nodes you’ve added. Select any of them to configure notifications.",
-  "my_alerts": "<b>Current Alerts enabled: {alerts}</b>\n\nChoose the types of notifications you want to edit.",
+  "my_alerts": "Supported Alerts:\n\n{alerts}\nPress button to change notification type status.",
   "alert_enabled": "Alert <b>{alert}</b> enabled!",
   "alert_disabled": "Alert <b>{alert}</b> disabled!",
   "complaint": "<b>Index: {index}</b>\nADNL: <code>{adnl}</code>\nEfficiency: <b>{efficiency}%</b>\nPenalty: <b>{penalty} TON</b>\n",

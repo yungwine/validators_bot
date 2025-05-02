@@ -12,17 +12,32 @@ from database import Database, UserModel
 
 @dataclasses.dataclass
 class AlertType:
-    type: str
     name: str
     description: str
 
 
-ALERTS = [
-    AlertType("ComplaintsAlert", "Validator fines", "Alert for validator fines"),
-    AlertType("TelemetryAlert", "Telemetry", "Alert for telemetry data"),
-    AlertType("ComplaintsInformation", "Validators complaints", "Alert for complaints on network validators"),
-    AlertType("ElectionsInformation", "Elections", "Alert for validators sending stakes"),
-]
+ALERTS = {
+    "ComplaintsAlert": AlertType(
+        "Validator fines",
+        "— Validator has been fined in the last validation round"
+    ),
+    "TelemetryAlert": AlertType(
+        "Telemetry",
+        """— Node is out of sync
+— CPU is overloaded
+— Node's db usage is more than 80%
+— Network is overloaded
+— Disk is overloaded"""
+    ),
+    "ComplaintsInformation": AlertType(
+        "Validators complaints",
+        "— All approved complaints for the last validation round"
+    ),
+    "ElectionsInformation": AlertType(
+        "Elections",
+        "— Alerts for validator's sent (or not sent) stakes"
+    )
+}
 
 
 class Alert(ABC):
@@ -52,7 +67,7 @@ class Alert(ABC):
 
     async def send_message(self, user_id: int, text: str) -> None:
         try:
-            buttons = [[InlineKeyboardButton(text=f"Disable {self.alert_type} alerts", callback_data=f"alert:disable_no_edit:{self.alert_type}")]]
+            buttons = [[InlineKeyboardButton(text=f"Disable {ALERTS[self.alert_type].name} Alerts", callback_data=f"alert:disable_no_edit:{self.alert_type}")]]
             markup = InlineKeyboardMarkup(inline_keyboard=buttons)
             await self.bot.send_message(chat_id=user_id, text=text, disable_notification=self.disable_notification, reply_markup=markup)
         except Exception as e:

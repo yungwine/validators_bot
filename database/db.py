@@ -50,10 +50,10 @@ class Database:
                 date_joined=datetime.datetime.now(),
             )
             session.add(user)
-            for alert in ALERTS:
+            for alert_type in ALERTS:
                 alert_model = AlertModel(
                     user_id=user.user_id,
-                    alert_type=alert.type,
+                    alert_type=alert_type,
                     enabled=True
                 )
                 session.add(alert_model)
