@@ -36,7 +36,7 @@ async def main_menu(message: Message | CallbackQuery) -> None:
         InlineKeyboardButton(text='Notifications', callback_data='notifications'),
     ]
     buttons3 = [
-        InlineKeyboardButton(text='Validators Tech Support', url='https://t.me/validators_help_bot'),
+        InlineKeyboardButton(text='Validators Support', url='https://t.me/validators_help_bot'),
     ]
     buttons4 = [
         InlineKeyboardButton(text='Node Help Group', url='https://t.me/ton_node_help'),
