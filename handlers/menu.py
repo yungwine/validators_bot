@@ -36,9 +36,12 @@ async def main_menu(message: Message | CallbackQuery) -> None:
         InlineKeyboardButton(text='Notifications', callback_data='notifications'),
     ]
     buttons3 = [
-        InlineKeyboardButton(text='Tech Support', url='https://t.me/validators_help_bot'),
+        InlineKeyboardButton(text='Validators Tech Support', url='https://t.me/validators_help_bot'),
     ]
-    markup = InlineKeyboardMarkup(inline_keyboard=[buttons1, buttons2, buttons3])
+    buttons4 = [
+        InlineKeyboardButton(text='Node Help Group', url='https://t.me/ton_node_help'),
+    ]
+    markup = InlineKeyboardMarkup(inline_keyboard=[buttons1, buttons2, buttons3, buttons4])
     if isinstance(message, CallbackQuery):
         await message.message.edit_text(text=TEXTS['main_menu'], reply_markup=markup, disable_web_page_preview=True)
     else:
