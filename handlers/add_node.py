@@ -6,6 +6,9 @@ from database import Database
 from handlers.utils import TEXTS
 from handlers.menu import main_menu
 
+
+MAX_NODES_PER_USER = 500
+
 add_node_router = Router(name=__name__)
 
 @add_node_router.callback_query(lambda c: c.data == 'add_node')
@@ -26,6 +29,9 @@ async def add_adnl_message_handler(message: Message, db_manager: Database, tonce
         await message.answer(text=TEXTS['wrong_adnl'])
         return
     nodes = await db_manager.get_user_nodes(message.from_user.id)
+    if len(nodes) > MAX_NODES_PER_USER:
+        await message.answer(text=TEXTS['too_many_nodes'].format(limit=MAX_NODES_PER_USER))
+        return
     for node in nodes:
         if node.adnl == adnl:
             await message.answer(text=TEXTS['node_already_exists'])

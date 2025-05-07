@@ -4,6 +4,7 @@
   "wrong_adnl": "The input doesn't seem to be a valid ADNL address.",
   "node_already_exists": "Node with this ADNL address already exists.",
   "node_added": "Node added successfully. Send label for the node or skip.\n\n",
+  "too_many_nodes": "You've reached the limit of {limit} nodes.\n\nTo add more nodes, please remove some of the existing ones.",
   "node_telemetry_not_send": "<b>Note:</b> this node does not send telemetry data so you won't receive <i>TelemetryAlert</i> notifications.\nTo enable telemetry on node type <code>set sendTelemetry true</code> in MyTonCtrl console.",
   "wrong_label": "The label should be 1-32 characters long.",
   "node_label_added": "Great! Now you can go to the <i>Notifications</i> section and configure notifications.",
