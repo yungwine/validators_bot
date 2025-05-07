@@ -16,7 +16,7 @@ async def add_adnl_callback_handler(callback_query: CallbackQuery, db_manager: D
 
 
 async def add_adnl_message_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
-    adnl = message.text
+    adnl = message.text.upper()
     try:
         int(adnl, 16)
         is_hex = True
