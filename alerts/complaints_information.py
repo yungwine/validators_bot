@@ -32,8 +32,8 @@ class ComplaintsInformation(Alert):
 		for complaint in complaints:
 			penalty = complaint['suggested_fine'] // 10**9
 			penalty_text = amount_formatting(penalty)
-			validator = await self.toncenter.get_validator(complaint.adnl_addr, past=True)
-			efficiency = await self.toncenter.get_validator_efficiency(complaint.adnl_addr, election_id)
+			validator = await self.toncenter.get_validator(complaint['adnl_addr'], past=True)
+			efficiency = await self.toncenter.get_validator_efficiency(complaint['adnl_addr'], election_id)
 			complaints_text += TEXTS['complaint'].format(index=validator['index'], adnl=complaint['adnl_addr'],
 														 efficiency=efficiency, penalty=penalty_text)
 			complaints_text += '\n'

@@ -30,7 +30,7 @@ class Toncenter:
 		efficiency_list = await self.get_efficiency_list(election_id=election_id)
 		for validator in efficiency_list:
 			if validator['adnl_addr'] == adnl:
-				efficiency = round(validator.efficiency, 2)
+				efficiency = round(validator['efficiency'], 2)
 				return efficiency
 
 	async def get_validator(self, adnl, past=False):
@@ -99,6 +99,6 @@ class Toncenter:
 		return data
 
 	async def get_efficiency_list(self, election_id) -> list:
-		url = f"https://toncenter.com/api/qos/cycleScoreboard?cycle_id={election_id}&limit=1000&api_key={self.api_key}"
+		url = f"https://toncenter.com/api/qos/cycleScoreboard?cycle_id={election_id}&limit=1000"
 		data = await try_get_url(url)
 		return data['scoreboard']
