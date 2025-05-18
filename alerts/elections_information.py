@@ -24,8 +24,8 @@ class ElectionsInformation(Alert):
 			await self.inform_before_start(user, election_id, node, node_election_data)
 
 	async def inform_before_start(self, user: UserModel, election_id, node: NodeModel, node_data: dict):
-		alert_name = f"{type(self).__name__}-{election_id}"
-		adnl_text = get_adnl_text(node.adnl, node.label)
+		alert_name = f"{type(self).__name__}-{election_id}-{node.adnl}"
+		adnl_text = get_adnl_text(node.adnl, node.label, cut=False)
 		stake = node_data['stake'] // 10**9
 		text = TEXTS['stake_sent'].format(adnl=adnl_text, stake=amount_formatting(stake))
 		await self.inform(user, alert_name, text)
@@ -44,7 +44,7 @@ class ElectionsInformation(Alert):
 		alert_name = f"{type(self).__name__}-{election_id}"
 		text = TEXTS['stake_not_sent'].format(election_id=election_id)
 		for node in problem_nodes:
-			adnl_text = get_adnl_text(node.adnl, node.label)
+			adnl_text = get_adnl_text(node.adnl, node.label, cut=False)
 			text += f"<code>{adnl_text}</code>\n"
 		await self.inform(user, alert_name, text)
 
