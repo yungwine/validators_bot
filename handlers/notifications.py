@@ -43,11 +43,12 @@ async def alert_callback_handler(callback_query: CallbackQuery, db_manager: Data
     action, alert_id = callback_query.data.split(':')[1:]
     if action == 'enable':
         await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, True)
-        await callback_query.message.edit_text(text=TEXTS['alert_enabled'].format(alert=alert_id), reply_markup=markup)
+        await callback_query.message.edit_text(text=TEXTS['alert_enabled'].format(alert=ALERTS[alert_id].name), reply_markup=markup)
     elif action == 'disable':
         await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
-        await callback_query.message.edit_text(text=TEXTS['alert_disabled'].format(alert=alert_id), reply_markup=markup)
+        await callback_query.message.edit_text(text=TEXTS['alert_disabled'].format(alert=ALERTS[alert_id].name), reply_markup=markup)
     elif action == 'disable_no_edit':
         await db_manager.set_user_alert_enabled(callback_query.from_user.id, alert_id, False)
         await callback_query.message.edit_reply_markup(reply_markup=None)
-        await callback_query.message.answer(text=TEXTS['alert_disabled'].format(alert=alert_id))
+        markup = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=f"Manage notifications", callback_data=f"notifications")]])
+        await callback_query.message.answer(text=TEXTS['alert_disabled'].format(alert=ALERTS[alert_id].name), reply_markup=markup)

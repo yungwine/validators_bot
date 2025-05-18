@@ -18,14 +18,23 @@ async def add_adnl_callback_handler(callback_query: CallbackQuery, db_manager: D
     await db_manager.set_user_state(callback_query.from_user.id, 'add_node')
 
 
-async def add_adnl_message_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
-    adnl = message.text.upper()
+def check_adnl_valid(adnl: str):
     try:
         int(adnl, 16)
         is_hex = True
     except:
         is_hex = False
     if not is_hex or len(adnl) != 64:
+        return False
+    return True
+
+
+async def add_adnl_message_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
+    adnl = message.text.upper()
+    return await add_adnl(adnl, message, db_manager, toncenter)
+
+async def add_adnl(adnl: str, message: Message, db_manager: Database, toncenter: Toncenter):
+    if not check_adnl_valid(adnl):
         await message.answer(text=TEXTS['wrong_adnl'])
         return
     nodes = await db_manager.get_user_nodes(message.from_user.id)
