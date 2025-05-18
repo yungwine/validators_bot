@@ -2,6 +2,7 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
+from alerts.toncenter import Toncenter
 from handlers.utils import TEXTS
 from database import Database
 
@@ -9,17 +10,23 @@ menu_router = Router(name=__name__)
 
 
 @menu_router.message(CommandStart())
-async def command_start_handler(message: Message, db_manager: Database) -> None:
-    if await db_manager.get_user_nodes(message.from_user.id):
-        await main_menu(message)
-        return
-    text = TEXTS['start']
-    buttons1 = [
-        InlineKeyboardButton(text='Add Node', callback_data='add_node'),
-    ]
-    markup = InlineKeyboardMarkup(inline_keyboard=[buttons1])
-    await message.answer(text, reply_markup=markup)
+async def command_start_handler(message: Message, db_manager: Database, toncenter: Toncenter) -> None:
     await db_manager.add_user_with_alerts(message.from_user.id, message.from_user.username)
+    args = message.text.split()
+    if len(args) < 2:
+        if await db_manager.get_user_nodes(message.from_user.id):
+            await main_menu(message)
+            return
+        text = TEXTS['start']
+        buttons1 = [
+            InlineKeyboardButton(text='Add Node', callback_data='add_node'),
+        ]
+        markup = InlineKeyboardMarkup(inline_keyboard=[buttons1])
+        await message.answer(text, reply_markup=markup)
+        return
+    from handlers.add_node import add_adnl
+    await add_adnl(args[1], message, db_manager, toncenter)
+
 
 @menu_router.callback_query(lambda c: c.data == 'main_menu')
 async def main_menu_callback_handler(callback_query: CallbackQuery) -> None:
