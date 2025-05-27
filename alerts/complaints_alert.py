@@ -27,5 +27,5 @@ class ComplaintsAlert(Alert):
 
 		adnl_short = get_adnl_text(node.adnl, node.label)
 		penalty = complaint['suggested_fine'] // 10**9  # todo: support fine_part
-		text = TEXTS['complaint'].format(adnl=node.adnl, adnl_short=adnl_short, election_id=complaint['election_id'], penalty=amount_formatting(penalty))
+		text = TEXTS['complaints_alert'].format(adnl=node.adnl, adnl_short=adnl_short, election_id=complaint['election_id'], penalty=amount_formatting(penalty))
 		await self.inform(user, alert_name, text)
