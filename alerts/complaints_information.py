@@ -42,7 +42,8 @@ class ComplaintsInformation(Alert):
 
 		start_time = timestamp2utcdatetime(election_id)
 		end_time = timestamp2utcdatetime(utime_until)
-		inform_text = TEXTS["complaints_information"].format(election_id=election_id, start_time=start_time, end_time=end_time, complaints=complaints_text)
+		election_id_text = f'<a href="https://validators.ton.org/?cycle_id={election_id}">{election_id}</a>'
+		inform_text = TEXTS["complaints_information"].format(election_id=election_id_text, start_time=start_time, end_time=end_time, complaints=complaints_text)
 
 		alert_name = f"{type(self).__name__}-{election_id}"
 
